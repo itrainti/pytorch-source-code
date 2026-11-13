@@ -33,11 +33,15 @@ class _NormBase(Module):
     num_features: int
     eps: float
     momentum: float | None
+    # NOTE
+    # "Affine: Learnable scaling (γ) and shifting (β) parameters, allowi
+    # tng the model to adapt the normalized distribution instead of being 
+    # strictly constrained to mean=0, var=1."
     affine: bool
     track_running_stats: bool
     # WARNING: weight and bias purposely not defined here.
     # See https://github.com/pytorch/pytorch/issues/39670
-yo
+
     def __init__(
         self,
         num_features: int,
@@ -93,10 +97,14 @@ yo
             self.register_buffer("num_batches_tracked", None)
         self.reset_parameters()
 
+    # NOTE
+    # initialize parameters
     def reset_running_stats(self) -> None:
         if self.track_running_stats:
             # running_mean/running_var/num_batches... are registered at runtime depending
             # if self.track_running_stats is on
+	    # NOTE
+	    # initialize mean with zero,initialize var with 1
             self.running_mean.zero_()  # type: ignore[union-attr]
             self.running_var.fill_(1)  # type: ignore[union-attr]
             self.num_batches_tracked.zero_()  # type: ignore[union-attr,operator]
@@ -106,6 +114,8 @@ yo
         if self.affine:
             init.ones_(self.weight)
             if self.bias is not None:
+		# NOTE
+		# initialize bias with zero
                 init.zeros_(self.bias)
 
     def _check_input_dim(self, input):

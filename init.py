@@ -243,7 +243,7 @@ def calculate_gain(
     else:
         raise ValueError(f"Unsupported nonlinearity {nonlinearity}")
 
-
+# Uniform init: fills the tensor with random numbers between a lower and upper bound.
 def uniform_(
     tensor: Tensor,
     a: float = 0.0,
@@ -550,7 +550,7 @@ def _calculate_correct_fan(tensor: Tensor, mode: _FanMode) -> int:
     fan_in, fan_out = _calculate_fan_in_and_fan_out(tensor)
     return fan_in if mode == "fan_in" else fan_out
 
-
+# desigh for deep networks with ReLu activation 
 def kaiming_uniform_(
     tensor: Tensor,
     a: float = 0,

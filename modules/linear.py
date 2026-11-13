@@ -19,6 +19,7 @@ __all__ = [
 ]
 
 
+# return itself
 class Identity(Module):
     r"""A placeholder identity operator that is argument-insensitive.
 
@@ -121,6 +122,10 @@ class Linear(Module):
         # Setting a=sqrt(5) in kaiming_uniform is the same as initializing with
         # uniform(-1/sqrt(in_features), 1/sqrt(in_features)). For details, see
         # https://github.com/pytorch/pytorch/issues/57109
+
+	# NOTE
+	# the weight in Linear is initialized by kaiming initialization
+	# but kaiming initialization paired with ReLu yeilds the best performance
         init.kaiming_uniform_(self.weight, a=math.sqrt(5))
         if self.bias is not None:
             fan_in, _ = init._calculate_fan_in_and_fan_out(self.weight)
@@ -145,6 +150,7 @@ class Linear(Module):
 # https://github.com/pytorch/pytorch/issues/58969
 # TODO: fail fast on quantization API usage error, then remove this class
 # and replace uses of it with plain Linear
+# XXX
 class NonDynamicallyQuantizableLinear(Linear):
     def __init__(
         self,
@@ -158,7 +164,8 @@ class NonDynamicallyQuantizableLinear(Linear):
             in_features, out_features, bias=bias, device=device, dtype=dtype
         )
 
-
+# NOTE
+# all dims shoule be identical of inputus except for the last dim
 class Bilinear(Module):
     r"""Applies a bilinear transformation to the incoming data: :math:`y = x_1^T A x_2 + b`.
 
@@ -236,6 +243,7 @@ class Bilinear(Module):
                 f"in1_features must be > 0, but got (in1_features={self.in1_features})"
             )
         bound = 1 / math.sqrt(self.weight.size(1))
+	# Uniform init: fills the tensor with random numbers between a lower and upper bound.
         init.uniform_(self.weight, -bound, bound)
         if self.bias is not None:
             init.uniform_(self.bias, -bound, bound)
@@ -248,7 +256,7 @@ class Bilinear(Module):
 
     def extra_repr(self) -> str:
         """
-        Return the extra representation of the module.
+        Return the extra representation of the module
         """
         return (
             f"in1_features={self.in1_features}, in2_features={self.in2_features}, "
@@ -256,6 +264,7 @@ class Bilinear(Module):
         )
 
 
+# create a linear without knowing the num of in_channals
 class LazyLinear(LazyModuleMixin, Linear):
     r"""A :class:`torch.nn.Linear` module where `in_features` is inferred.
 
