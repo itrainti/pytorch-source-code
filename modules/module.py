@@ -777,7 +777,7 @@ class Module:
 
         .. code-block:: text
 
-            A(
+            (
                 (net_b): Module(
                     (net_c): Module(
                         (conv): Conv2d(3, 3, 3)
@@ -3036,6 +3036,8 @@ class Module:
             )
 
         for p in self.parameters():
+            # # If set_to_none is True, set p.grad = None.
+            # This drops the gradient tensor, so Python can free its memory.
             if p.grad is not None:
                 if set_to_none:
                     p.grad = None
@@ -3074,6 +3076,8 @@ class Module:
             mod_str = repr(module)
             mod_str = _addindent(mod_str, 2)
             child_lines.append("(" + key + "): " + mod_str)
+        # NOTE
+        # list concatenation
         lines = extra_lines + child_lines
 
         main_str = self._get_name() + "("
@@ -3086,7 +3090,9 @@ class Module:
 
         main_str += ")"
         return main_str
-
+	
+    # NOTE
+    # output all the attrs
     def __dir__(self):
         module_attrs = dir(self.__class__)
         attrs = list(self.__dict__.keys())

@@ -11,6 +11,7 @@ from .lazy import LazyModuleMixin
 from .module import Module
 
 
+# ALL modules of batchnorm
 __all__ = [
     "BatchNorm1d",
     "LazyBatchNorm1d",
@@ -27,6 +28,8 @@ class _NormBase(Module):
 
     _version = 2
     __constants__ = ["track_running_stats", "momentum", "eps", "num_features", "affine"]
+    # NOTE
+    # or the nums of channal
     num_features: int
     eps: float
     momentum: float | None
@@ -34,7 +37,7 @@ class _NormBase(Module):
     track_running_stats: bool
     # WARNING: weight and bias purposely not defined here.
     # See https://github.com/pytorch/pytorch/issues/39670
-
+yo
     def __init__(
         self,
         num_features: int,
@@ -83,6 +86,8 @@ class _NormBase(Module):
             )
             self.num_batches_tracked: Tensor | None
         else:
+            # NOTE
+            # register metadata as buffer
             self.register_buffer("running_mean", None)
             self.register_buffer("running_var", None)
             self.register_buffer("num_batches_tracked", None)
