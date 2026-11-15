@@ -45,6 +45,7 @@ def _list_with_default(out_size: list[int], defaults: list[int]) -> list[int]:
     ]
 
 
+# add prefix when you use many cudas to train
 def consume_prefix_in_state_dict_if_present(
     state_dict: dict[str, Any],
     prefix: str,

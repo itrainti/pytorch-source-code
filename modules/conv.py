@@ -77,6 +77,8 @@ class _ConvNd(Module):
     stride: tuple[int, ...]
     padding: str | tuple[int, ...]
     dilation: tuple[int, ...]
+    # NOTE
+    # transposed is an attr to identify whether a conv is a common conv or a transpose conv
     transposed: bool
     output_padding: tuple[int, ...]
     groups: int
